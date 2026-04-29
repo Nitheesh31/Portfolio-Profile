@@ -16,7 +16,7 @@ const About = () => {
               
 
               <p>
-                I am Nitheesh A, a motivated Java Full Stack Developer with a strong foundation in both front-end and back-end development. I specialize in designing and developing scalable web applications using Java, Spring Boot, React, and modern web technologies.
+                  I am Nitheesh A, a motivated Java Full Stack Developer with a strong foundation in both front-end and back-end development. I specialize in designing and developing scalable web applications using Java, Spring Boot, React, and modern web technologies.
               </p>
 
         
