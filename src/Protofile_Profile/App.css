@@ -1,0 +1,8 @@
+.app{min-height:100vh;display:flex;flex-direction:column}
+main section{scroll-margin-top:68px}
+.site-footer{
+  background:#0f2040;color:rgba(255,255,255,0.55);
+  text-align:center;padding:2.5rem;font-size:0.82rem;
+  font-family:'Inter',sans-serif;
+}
+.site-footer span{color:#93c5fd}

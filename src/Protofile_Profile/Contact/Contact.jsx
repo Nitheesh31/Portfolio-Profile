@@ -1,115 +1,90 @@
-import React, { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./Contact.css";
 
+const CONTACT_ITEMS = [
+  { icon:"ti-mail", bg:"rgba(37,99,235,0.08)", color:"#2563eb", lbl:"Email", val:"nitheeshgeethun@gmail.com", href:"mailto:nitheeshgeethun@gmail.com" },
+  { icon:"ti-phone", bg:"rgba(34,197,94,0.08)", color:"#15803d", lbl:"Phone", val:"+91 93445 86748" },
+  { icon:"ti-map-pin", bg:"rgba(234,179,8,0.08)", color:"#92400e", lbl:"Location", val:"Bangalore, India" },
+  { icon:"ti-brand-github", bg:"rgba(15,32,64,0.07)", color:"#0f2040", lbl:"GitHub", val:"github.com/Nitheesh31", href:"https://github.com/Nitheesh31" },
+  { icon:"ti-brand-linkedin", bg:"rgba(10,102,194,0.08)", color:"#0a66c2", lbl:"LinkedIn", val:"linkedin.com/in/nitheesh3125", href:"https://www.linkedin.com/in/nitheesh3125" },
+];
+
 const Contact = () => {
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    message: ""
-  });
+  const [form, setForm] = useState({ name:"", email:"", subject:"", message:"" });
+  const [submitted, setSubmitted] = useState(false);
+  const ref = useRef(null);
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
+  const handleSubmit = () => {
+    if (!form.name || !form.email || !form.message) { alert("Please fill all required fields."); return; }
+    setSubmitted(true);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    alert("Message Sent Successfully ✅");
-    console.log(form);
-  };
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("visible"); observer.unobserve(e.target); } }),
+      { threshold: 0.1, rootMargin: "0px 0px -40px 0px" }
+    );
+    ref.current?.querySelectorAll(".reveal,.reveal-left,.reveal-right").forEach(el => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    
-    <section className="contact">
-      <h2>Contact Me</h2>
-
-      <div className="contact-container">
-
-
-        <div className="contact-info">
-          <h3>Get in Touch</h3>
-
-          <table>
-            <tbody>
-              <tr>
-                <td><b>Email</b></td>
-                <td>: nitheeshgeethun@gmail.com</td>
-              </tr>
-
-              <tr>
-                <td><b>Phone</b></td>
-                <td>: +91 93445 86748</td>
-              </tr>
-
-              <tr>
-                <td><b>Location</b></td>
-                <td>: Bangalore, India</td>
-              </tr>
-
-              <tr>
-                <td><b>GitHub</b></td>
-                <td>
-                  : <a
-                      href="https://github.com/Nitheesh31"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      github.com/Nitheesh31
-                    </a>
-                </td>
-              </tr>
-
-              <tr>
-                <td><b>LinkedIn</b></td>
-                <td>
-                  : <a
-                      href="https://www.linkedin.com/in/nitheesh3125"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      linkedin.com/in/nitheesh3125
-                    </a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-
-        <form className="contact-form" onSubmit={handleSubmit}>
-          <input
-            type="text"
-            name="name"
-            placeholder="Your Name"
-            value={form.name}
-            onChange={handleChange}
-            required
-          />
-
-          <input
-            type="email"
-            name="email"
-            placeholder="Your Email"
-            value={form.email}
-            onChange={handleChange}
-            required
-          />
-
-          <textarea
-            name="message"
-            placeholder="Your Message"
-            rows="5"
-            value={form.message}
-            onChange={handleChange}
-            required
-          ></textarea>
-
-          <button type="submit">Send Message</button>
-        </form>
-
+    <div className="contact-section" ref={ref}>
+      <div className="sec-header reveal">
+        <div className="sec-label"><i className="ti ti-mail" aria-hidden="true"></i> Contact</div>
+        <h2 className="sec-title">Let's Connect</h2>
+        <div className="sec-divider"></div>
       </div>
-    </section>
+      <div className="contact-layout">
+        <div className="contact-left reveal-left">
+          <div className="avail-strip">
+            <span className="avail-dot"></span>
+            <p><strong>Currently available</strong> — Open to full-time roles and freelance projects in Java Full Stack development.</p>
+          </div>
+          <div className="cinfo-card">
+            <h3>Get in Touch</h3>
+            {CONTACT_ITEMS.map(item => (
+              <div className="ci" key={item.lbl}>
+                <div className="ci-icon" style={{background:item.bg,color:item.color}}>
+                  <i className={`ti ${item.icon}`} aria-hidden="true"></i>
+                </div>
+                <div>
+                  <div className="ci-lbl">{item.lbl}</div>
+                  <div className="ci-val">
+                    {item.href
+                      ? <a href={item.href} target={item.href.startsWith("http")?"_blank":undefined} rel="noreferrer">{item.val}</a>
+                      : item.val}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="cform reveal-right">
+          <h3>Send a Message</h3>
+          {!submitted ? (
+            <>
+              <div className="f-row">
+                <div className="fg"><label>Your Name *</label><input name="name" placeholder="Nitheesh A" value={form.name} onChange={handleChange} /></div>
+                <div className="fg"><label>Your Email *</label><input name="email" type="email" placeholder="you@email.com" value={form.email} onChange={handleChange} /></div>
+              </div>
+              <div className="fg"><label>Subject</label><input name="subject" placeholder="Job opportunity / Collaboration" value={form.subject} onChange={handleChange} /></div>
+              <div className="fg"><label>Message *</label><textarea name="message" rows="5" placeholder="Hi Nitheesh, I'd love to connect..." value={form.message} onChange={handleChange}></textarea></div>
+              <button className="send-btn" onClick={handleSubmit}>
+                <i className="ti ti-send" aria-hidden="true"></i> Send Message
+              </button>
+            </>
+          ) : (
+            <div className="success-box show">
+              <i className="ti ti-circle-check" aria-hidden="true"></i>
+              <h4>Message Sent!</h4>
+              <p>Thanks for reaching out. I'll get back to you soon.</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
   );
 };
-
 export default Contact;
